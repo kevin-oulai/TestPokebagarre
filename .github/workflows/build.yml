@@ -24,7 +24,6 @@ jobs:
         run:  chmod +x ./gradlew
       - name: Build & test and compute JaCoCo reports
         run: ./gradlew build #jacocoTestReport
-        on:
   build-test:
     name: Build & Test
     runs-on: ubuntu-latest
