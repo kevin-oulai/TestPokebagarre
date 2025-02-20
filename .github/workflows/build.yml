@@ -25,13 +25,6 @@ jobs:
       - name: Build & test and compute JaCoCo reports
         run: ./gradlew build #jacocoTestReport
         on:
-pull_request:
-push:
-permissions:
-  contents: read
-  actions: read
-  checks: write
-jobs:
   build-test:
     name: Build & Test
     runs-on: ubuntu-latest
