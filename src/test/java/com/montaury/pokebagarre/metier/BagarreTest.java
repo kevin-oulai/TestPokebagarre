@@ -4,6 +4,7 @@ import com.montaury.pokebagarre.erreurs.ErreurMemePokemon;
 import com.montaury.pokebagarre.erreurs.ErreurPokemonNonRenseigne;
 import com.montaury.pokebagarre.erreurs.ErreurRecuperationPokemon;
 import com.montaury.pokebagarre.webapi.PokeBuildApi;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -14,11 +15,26 @@ import java.util.concurrent.ExecutionException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
+/*
+*
+*
+* */
+
 class BagarreTest {
+    private PokeBuildApi fausseApi;
+    private Bagarre bagarre;
+
+    @BeforeEach
+    public void setUp(){
+        fausseApi = Mockito.mock(PokeBuildApi.class);
+        bagarre = new Bagarre(fausseApi);
+    }
+
+
+
     @Test
     void devrait_lever_une_exception_si_le_nom_du_second_pokemon_non_renseigne(){
         // GIVEN
-        Bagarre bagarre = new Bagarre();
         Pokemon pokemon1 = new Pokemon("Pikachu", null, null);
         Pokemon pokemon2 = new Pokemon(null, null, null);
         // WHEN
@@ -33,7 +49,6 @@ class BagarreTest {
     @Test
     void devrait_lever_une_exception_si_le_nom_du_premier_pokemon_non_renseigne(){
         // GIVEN
-        Bagarre bagarre = new Bagarre();
         Pokemon pokemon1 = new Pokemon(null, null, null);
         Pokemon pokemon2 = new Pokemon("Dracaufeu", null, null);
         // WHEN
@@ -63,7 +78,6 @@ class BagarreTest {
     @Test
     void devrait_lever_une_exception_si_le_nom_du_premier_pokemon_vide(){
         // GIVEN
-        Bagarre bagarre = new Bagarre();
         Pokemon pokemon1 = new Pokemon("", null, null);
         Pokemon pokemon2 = new Pokemon("Dracaufeu", null, null);
         // WHEN
@@ -78,7 +92,6 @@ class BagarreTest {
     @Test
     void devrait_lever_une_exception_si_les_noms_des_pokemons_sont_identiques(){
         //GIVEN
-        Bagarre bagarre = new Bagarre();
         Pokemon pokemon1 = new Pokemon("Dracaufeu", null, null);
         Pokemon pokemon2 = new Pokemon("Dracaufeu", null, null);
         // WHEN
@@ -92,8 +105,6 @@ class BagarreTest {
     @Test
     void devrait_lever_une_exception_si_le_pokemon_un_pas_trouve_dans_api() {
         // GIVEN
-        var fausseApi = Mockito.mock(PokeBuildApi.class);
-        Bagarre bagarre = new Bagarre(fausseApi);
         String nom_pokemon_1 = "Pikachu";
         String nom_pokemon_2 = "Dracaufeu";
         Mockito.when(fausseApi.recupererParNom(nom_pokemon_1)).thenReturn(CompletableFuture.failedFuture(new ErreurRecuperationPokemon(nom_pokemon_1)));
@@ -113,8 +124,6 @@ class BagarreTest {
     @Test
     void devrait_lever_une_exception_si_le_pokemon_deux_pas_trouve_dans_api() {
         // GIVEN
-        var fausseApi = Mockito.mock(PokeBuildApi.class);
-        Bagarre bagarre = new Bagarre(fausseApi);
         String nom_pokemon_1 = "Pikachu";
         String nom_pokemon_2 = "Dracaufeu";
         Mockito.when(fausseApi.recupererParNom(nom_pokemon_1)).thenReturn(CompletableFuture.completedFuture(new Pokemon("Pikachu", null, null)));
@@ -134,8 +143,6 @@ class BagarreTest {
     @Test
     void devrait_retourner_le_premier_pokemon_vainqueur() {
         // GIVEN
-        var fausseApi = Mockito.mock(PokeBuildApi.class);
-        Bagarre bagarre = new Bagarre(fausseApi);
         String nom_pokemon_1 = "Pikachu";
         String nom_pokemon_2 = "Dracaufeu";
         Mockito.when(fausseApi.recupererParNom(nom_pokemon_1)).thenReturn(CompletableFuture.completedFuture(new Pokemon(nom_pokemon_1, "url1", new Stats(2,2))));
@@ -157,8 +164,6 @@ class BagarreTest {
     @Test
     void devrait_retourner_le_second_pokemon_vainqueur() {
         // GIVEN
-        var fausseApi = Mockito.mock(PokeBuildApi.class);
-        Bagarre bagarre = new Bagarre(fausseApi);
         String nom_pokemon_1 = "Pikachu";
         String nom_pokemon_2 = "Dracaufeu";
         Mockito.when(fausseApi.recupererParNom(nom_pokemon_1)).thenReturn(CompletableFuture.completedFuture(new Pokemon(nom_pokemon_1, "url1", new Stats(1,1))));
